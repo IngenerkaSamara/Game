@@ -1,0 +1,27 @@
+#include "TXLib.h"
+
+int main()
+{
+    txCreateWindow (800, 600);
+
+    int y = 100;    int vy = 5;
+
+    while (true)
+    {
+        txSetColor(TX_WHITE, 5);
+        txSetFillColor(TX_BLACK);
+        txClear();
+
+        txCircle(500, y, 20);
+
+        if (GetAsyncKeyState(VK_UP))
+            y = y + 3;
+        else if (GetAsyncKeyState(VK_DOWN))
+            y = y - 3;
+
+        txSleep(20);
+    }
+
+    return 0;
+}
+
