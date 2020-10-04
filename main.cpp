@@ -2,9 +2,15 @@
 
 int main()
 {
-    txCreateWindow (800, 600);
+    txCreateWindow (1200, 800);
 
-    int y = 100;    int x = 500;    double speed = 5;
+    HDC track = txLoadImage ("Spa.bmp");
+    int xTrack = 0;
+    int yTrack = 0;
+
+    HDC car = txLoadImage ("Acura2.bmp");
+    int yCar = 100;    int xCar = 500;    double speed = 5;
+
 
     int x2 = 400;   int y2 = 500;
 
@@ -14,44 +20,46 @@ int main()
         txSetFillColor(TX_BLACK);
         txClear();
 
-        txCircle(x, y, 20);
+        txBitBlt (txDC(), 0, 0, 2400, 1623, track);
+        txTransparentBlt (txDC(), xCar, yCar, 120, 63, car, 0, 0, TX_WHITE);
+
+
 
         txRectangle(x2, y2, x2 + 50, y2 + 50);
 
         //Столкновение
-        if (x > x2 &&
-            x < x2 + 50 &&
-            y > y2 &&
-            y < y2 + 50)
+        if (xCar > x2 &&
+            xCar < x2 + 50 &&
+            yCar > y2 &&
+            yCar < y2 + 50)
         {
-            x = x2 - 10;
+            xCar = x2 - 10;
         }
 
 
         //Движение
         if (GetAsyncKeyState(VK_LEFT))
-            x = x - speed;
+            xCar = xCar - speed;
         else if (GetAsyncKeyState(VK_RIGHT))
-            x = x + speed;
+            xCar = xCar + speed;
 
         if (GetAsyncKeyState(VK_UP))
-            y = y - speed;
+            yCar = yCar - speed;
         else if (GetAsyncKeyState(VK_DOWN))
-            y = y + speed;
+            yCar = yCar + speed;
 
-
-        /*
-        speed = speed * 0.9;
-        */
 
         //Проверка выхода за пределы экрана
-        if (x < 0)
-            x = 0;
-        if (x > 800)
-            x = 800;
+        if (xCar < 0)
+            xCar = 0;
+        if (xCar > txGetExtentX())
+            xCar = txGetExtentX();
 
         txSleep(20);
     }
+
+    txDeleteDC (track);
+    txDeleteDC (car);
 
     return 0;
 }
