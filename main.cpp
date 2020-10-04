@@ -4,24 +4,32 @@ int main()
 {
     txCreateWindow (1200, 800);
 
-    HDC track = txLoadImage ("Spa.bmp");
-    int xTrack = 0;
-    int yTrack = 0;
+    HDC track = txLoadImage ("Pictures/Tracks/Spa.bmp");
+    int xTrack = -100;
+    int yTrack = 700;
 
-    HDC car = txLoadImage ("Acura2.bmp");
-    int yCar = 100;    int xCar = 500;    double speed = 5;
+    HDC carLeft = txLoadImage ("Pictures/Cars/Acura/Left.bmp");
+    HDC carRight = txLoadImage ("Pictures/Cars/Acura/Right.bmp");
+    HDC carUp = txLoadImage ("Pictures/Cars/Acura/Up.bmp");
+    HDC carDown = txLoadImage ("Pictures/Cars/Acura/Down.bmp");
+    HDC car = carLeft;
+    int yCar = 400;    int xCar = 600;    double speed = 5;
 
 
     int x2 = 400;   int y2 = 500;
 
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
+        txBegin();
         txSetColor(TX_WHITE, 5);
-        txSetFillColor(TX_BLACK);
+        txSetFillColor(TX_WHITE);
         txClear();
 
-        txBitBlt (txDC(), 0, 0, 2400, 1623, track);
-        txTransparentBlt (txDC(), xCar, yCar, 120, 63, car, 0, 0, TX_WHITE);
+        txBitBlt (txDC(), 0, 0, 2400, 1623, track, xTrack, yTrack);
+        if (car == carLeft || car == carRight)
+            txTransparentBlt (txDC(), xCar - 40, yCar - 40, 120, 63, car, 0, 0, TX_WHITE);
+        else
+            txTransparentBlt (txDC(), xCar - 40, yCar - 40, 63, 120, car, 0, 0, TX_WHITE);
 
 
 
@@ -39,14 +47,26 @@ int main()
 
         //Движение
         if (GetAsyncKeyState(VK_LEFT))
-            xCar = xCar - speed;
+        {
+            xTrack = xTrack - speed;
+            car = carLeft;
+        }
         else if (GetAsyncKeyState(VK_RIGHT))
-            xCar = xCar + speed;
+        {
+            xTrack = xTrack + speed;
+            car = carRight;
+        }
 
         if (GetAsyncKeyState(VK_UP))
-            yCar = yCar - speed;
+        {
+            yTrack = yTrack - speed;
+            car = carUp;
+        }
         else if (GetAsyncKeyState(VK_DOWN))
-            yCar = yCar + speed;
+        {
+            yTrack = yTrack + speed;
+            car = carDown;
+        }
 
 
         //Проверка выхода за пределы экрана
@@ -56,10 +76,15 @@ int main()
             xCar = txGetExtentX();
 
         txSleep(20);
+        txEnd();
     }
 
     txDeleteDC (track);
     txDeleteDC (car);
+    txDeleteDC (carLeft);
+    txDeleteDC (carRight);
+    txDeleteDC (carUp);
+    txDeleteDC (carDown);
 
     return 0;
 }
