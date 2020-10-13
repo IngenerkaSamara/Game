@@ -24,7 +24,9 @@ int checkLimitY(int yTrack)
 
 int main()
 {
-    txCreateWindow (1200, 800);
+    int WIDTH = 1200;
+    int HEIGHT = 800;
+    txCreateWindow (WIDTH, HEIGHT);
 
     HDC track = txLoadImage ("Pictures/Tracks/Spa.bmp");
     int xTrack = -100;
@@ -35,7 +37,7 @@ int main()
     HDC carUp = txLoadImage ("Pictures/Cars/Acura/Up.bmp");
     HDC carDown = txLoadImage ("Pictures/Cars/Acura/Down.bmp");
     HDC car = carLeft;
-    int xCar = 600;    int yCar = 400;    double speed = 5;
+    int xCar = 600;    int yCar = 400;    double speed = 5; float fuelCar = 10;
 
 
     HDC enemyLeft = txLoadImage ("Pictures/Cars/Mercedes/Left.bmp");
@@ -45,6 +47,11 @@ int main()
     HDC enemy = enemyLeft;
     int xEnemy = 620;   int yEnemy = 420;
 
+    HDC jerrycan = txLoadImage("Pictures/jerrycan.bmp");
+    int xCan = 800;
+    int yCan = 1000;
+    bool visibleCan = true;
+
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
         txBegin();
@@ -53,8 +60,44 @@ int main()
         txClear();
 
         txBitBlt (txDC(), 0, 0, 2400, 1623, track, xTrack, yTrack);
+        if (visibleCan)
+            txTransparentBlt(txDC(), xCan-xTrack, yCan-yTrack, 50, 70, jerrycan, 0, 0, TX_WHITE);
+
         drawCar(xCar, yCar, 120, 63, car, carLeft, carRight);
         drawCar(xEnemy, yEnemy, 120, 51, enemy, enemyLeft, enemyRight);
+
+        //Уровень топлива
+        txSetColor(TX_BLACK);
+        txSetFillColor(TX_BLACK);
+        txRectangle(xCar - 40, yCar - 50, xCar - 40 + 100, yCar - 40);
+        txSetFillColor(TX_GREEN);
+        txRectangle(xCar - 40, yCar - 50, xCar - 40 + 5 * fuelCar, yCar - 40);
+
+
+
+
+        //Строка состояния
+        txSetFillColor(TX_WHITE);
+        txRectangle( 0, HEIGHT - 50, WIDTH, HEIGHT);
+        txTextOut  (10, HEIGHT - 40, "Машина");
+
+        char toplivo[50];
+        sprintf(toplivo, "Топливо: %.2f/20", fuelCar);
+        txTextOut(100, HEIGHT - 40, toplivo);
+
+
+
+
+        //КОнтакт с канистрой
+        if (xCar - 40 < xCan-xTrack + 50 &&
+            xCar + 40 > xCan-xTrack &&
+            yCar - 40 < yCan-yTrack + 70 &&
+            yCar + 40 > yCan-yTrack &&
+            visibleCan)
+        {
+            visibleCan = false;
+            fuelCar = fuelCar + 10;
+        }
 
 
         //Движение
@@ -105,31 +148,35 @@ int main()
         }
 
         //Движение карты
-        if (xCar < 100)
+        if (xCar < 100 || xEnemy < 100)
         {
+            xEnemy = xEnemy + speed;
             xCar = xCar + speed;
-            xEnemy = xEnemy - speed;
             xTrack = xTrack - speed;
         }
-        else if (xCar > 900)
+
+        else if (xCar > 900 || xEnemy > 900)
         {
+            xEnemy = xEnemy - speed;
             xCar = xCar - speed;
-            xEnemy = xEnemy + speed;
             xTrack = xTrack + speed;
         }
 
-        if (xEnemy < 100)
+
+
+        if (yCar < 100 || yEnemy < 100)
         {
-            xEnemy = xEnemy + speed;
-            xCar = xCar - speed;
-            xTrack = xTrack - speed;
+            yCar = yCar + speed;
+            yEnemy = yEnemy + speed;
+            yTrack = yTrack - speed;
         }
-        else if (xEnemy > 900)
+        else if (yCar > 700 || yEnemy > 700)
         {
-            xEnemy = xEnemy - speed;
-            xCar = xCar + speed;
-            xTrack = xTrack + speed;
+            yCar = yCar - speed;
+            yEnemy = yEnemy - speed;
+            yTrack = yTrack + speed;
         }
+
 
 
         //Проверка выхода за пределы экрана
@@ -137,6 +184,7 @@ int main()
         yTrack = checkLimitY(yTrack);
 
         txSleep(20);
+        fuelCar = fuelCar - 0.01;
         txEnd();
     }
 
@@ -146,6 +194,8 @@ int main()
 
     txDeleteDC (enemy);        txDeleteDC (enemyLeft);    txDeleteDC (enemyRight);
     txDeleteDC (enemyUp);      txDeleteDC (enemyDown);
+
+    txDeleteDC(jerrycan);
 
     return 0;
 }
