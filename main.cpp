@@ -12,24 +12,21 @@ int main()
     int xTrack = -100;
     int yTrack = 700;
 
-    HDC carLeft = txLoadImage ("Pictures/Cars/Acura/Left.bmp");
-    HDC carRight = txLoadImage ("Pictures/Cars/Acura/Right.bmp");
-    HDC carUp = txLoadImage ("Pictures/Cars/Acura/Up.bmp");
-    HDC carDown = txLoadImage ("Pictures/Cars/Acura/Down.bmp");
-    HDC car = carLeft;
-    int xCar = 600;    int yCar = 400;    double speed = 5; float fuelCar = 10;
-
-
-    HDC enemyLeft = txLoadImage ("Pictures/Cars/Mercedes/Left.bmp");
-    HDC enemyRight = txLoadImage ("Pictures/Cars/Mercedes/Right.bmp");
-    HDC enemyUp = txLoadImage ("Pictures/Cars/Mercedes/Up.bmp");
-    HDC enemyDown = txLoadImage ("Pictures/Cars/Mercedes/Down.bmp");
-    HDC enemy = enemyLeft;
-    int xEnemy = 620;   int yEnemy = 420;
+    Car car = {600, 400, 10.0, 5, 120, 63, 104,
+                txLoadImage ("Pictures/Cars/Acura/Left.bmp"),
+                txLoadImage ("Pictures/Cars/Acura/Right.bmp"),
+                txLoadImage ("Pictures/Cars/Acura/Up.bmp"),
+                txLoadImage ("Pictures/Cars/Acura/Down.bmp"), car.Left};
+    Car enemy = {620, 420, 10.0, 5, 120, 51, 102,
+                txLoadImage ("Pictures/Cars/Mercedes/Left.bmp"),
+                txLoadImage ("Pictures/Cars/Mercedes/Right.bmp"),
+                txLoadImage ("Pictures/Cars/Mercedes/Up.bmp"),
+                txLoadImage ("Pictures/Cars/Mercedes/Down.bmp"), enemy.Left};
 
     HDC jerrycan = txLoadImage("Pictures/jerrycan.bmp");
     int xCan = 800;
     int yCan = 1000;
+    int frameCan = 0;
     bool visibleCan = true;
 
     while (!GetAsyncKeyState(VK_ESCAPE))
@@ -41,19 +38,16 @@ int main()
 
         txBitBlt (txDC(), 0, 0, 2400, 1623, track, xTrack, yTrack);
         if (visibleCan)
-            txTransparentBlt(txDC(), xCan-xTrack, yCan-yTrack, 50, 70, jerrycan, 0, 0, TX_WHITE);
+            txTransparentBlt(txDC(), xCan-xTrack, yCan-yTrack,
+                50, 74, jerrycan, 50 * frameCan, 0, TX_WHITE);
 
-        drawCar(xCar, yCar, 120, 63, car, carLeft, carRight);
-        drawCar(xEnemy, yEnemy, 120, 51, enemy, enemyLeft, enemyRight);
+        //Кадр канистры
+        frameCan++;
+        if (frameCan >= 4)
+            frameCan = 0;
 
-        //Уровень топлива
-        txSetColor(TX_BLACK);
-        txSetFillColor(TX_BLACK);
-        txRectangle(xCar - 40, yCar - 50, xCar - 40 + 100, yCar - 40);
-        txSetFillColor(TX_GREEN);
-        txRectangle(xCar - 40, yCar - 50, xCar - 40 + 5 * fuelCar, yCar - 40);
-
-
+        car.draw();
+        enemy.draw();
 
 
         //Строка состояния
@@ -62,34 +56,31 @@ int main()
         txTextOut  (10, HEIGHT - 40, "Машина");
 
         char toplivo[50];
-        sprintf(toplivo, "Топливо: %.2f/20", fuelCar);
+        sprintf(toplivo, "Топливо: %.2f/20", car.fuel);
         txTextOut(100, HEIGHT - 40, toplivo);
 
 
 
 
         //КОнтакт с канистрой
-        if (xCar - 40 < xCan-xTrack + 50 &&
-            xCar + 40 > xCan-xTrack &&
-            yCar - 40 < yCan-yTrack + 70 &&
-            yCar + 40 > yCan-yTrack &&
+        if (car.x - 40 < xCan-xTrack + 50 &&
+            car.x + 40 > xCan-xTrack &&
+            car.y - 40 < yCan-yTrack + 70 &&
+            car.y + 40 > yCan-yTrack &&
             visibleCan)
         {
             visibleCan = false;
-            fuelCar = fuelCar + 10;
+            car.fuel = car.fuel + 10;
         }
 
 
         //Движение
-        moveCar(&xCar, &yCar, speed, &car,
-                carLeft, carRight, carUp, carDown);
-        moveEnemy(&xEnemy, &yEnemy, speed, &enemy,
-                enemyLeft, enemyRight, enemyUp, enemyDown);
-
+        car.moving();
+        enemy.moving2();
 
         //Движение карты
-        trackMovingX(&xCar, &xEnemy, &xTrack, speed);
-        trackMovingY(&yCar, &yEnemy, &yTrack, speed);
+        trackMovingX(&car.x, &enemy.x, &xTrack, car.speed);
+        trackMovingY(&car.y, &enemy.y, &yTrack, car.speed);
 
 
         //Проверка выхода за пределы экрана
@@ -97,16 +88,15 @@ int main()
         yTrack = checkLimitY(yTrack);
 
         txSleep(20);
-        fuelCar = fuelCar - 0.01;
         txEnd();
     }
 
     txDeleteDC (track);
-    txDeleteDC (car);          txDeleteDC (carLeft);      txDeleteDC (carRight);
-    txDeleteDC (carUp);        txDeleteDC (carDown);
+    txDeleteDC (car.pic);      txDeleteDC (car.Left);      txDeleteDC (car.Right);
+    txDeleteDC (car.Up);       txDeleteDC (car.Down);
 
-    txDeleteDC (enemy);        txDeleteDC (enemyLeft);    txDeleteDC (enemyRight);
-    txDeleteDC (enemyUp);      txDeleteDC (enemyDown);
+    txDeleteDC (enemy.pic);    txDeleteDC (enemy.Left);    txDeleteDC (enemy.Right);
+    txDeleteDC (enemy.Up);     txDeleteDC (enemy.Down);
 
     txDeleteDC(jerrycan);
 
