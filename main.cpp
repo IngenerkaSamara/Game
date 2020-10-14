@@ -1,26 +1,6 @@
 #include "TXLib.h"
-
-void drawCar(int xCar, int yCar, int width, int height, HDC car, HDC carLeft, HDC carRight)
-{
-    if (car == carLeft || car == carRight)
-        txTransparentBlt (txDC(), xCar - 40, yCar - 40, width, height, car, 0, 0, TX_WHITE);
-    else
-        txTransparentBlt (txDC(), xCar - 40, yCar - 40, height, width, car, 0, 0, TX_WHITE);
-}
-
-int checkLimitX(int xTrack)
-{
-    if (xTrack < -500)         xTrack = -500;
-    if (xTrack > 2500)         xTrack = 2500;
-    return xTrack;
-}
-
-int checkLimitY(int yTrack)
-{
-    if (yTrack < -500)         yTrack = -500;
-    if (yTrack > 2500)         yTrack = 2500;
-    return yTrack;
-}
+#include "car.cpp"
+#include "track.cpp"
 
 int main()
 {
@@ -101,82 +81,15 @@ int main()
 
 
         //Движение
-        if (GetAsyncKeyState(VK_LEFT))
-        {
-            xCar = xCar - speed;
-            car = carLeft;
-        }
-        else if (GetAsyncKeyState(VK_RIGHT))
-        {
-            xCar = xCar + speed;
-            car = carRight;
-        }
+        moveCar(&xCar, &yCar, speed, &car,
+                carLeft, carRight, carUp, carDown);
+        moveEnemy(&xEnemy, &yEnemy, speed, &enemy,
+                enemyLeft, enemyRight, enemyUp, enemyDown);
 
-        if (GetAsyncKeyState(VK_UP))
-        {
-            yCar = yCar - speed;
-            car = carUp;
-        }
-        else if (GetAsyncKeyState(VK_DOWN))
-        {
-            yCar = yCar + speed;
-            car = carDown;
-        }
-
-
-
-        if (GetAsyncKeyState('A'))
-        {
-            xEnemy = xEnemy - speed;
-            enemy = enemyLeft;
-        }
-        else if (GetAsyncKeyState('D'))
-        {
-            xEnemy = xEnemy + speed;
-            enemy = enemyRight;
-        }
-
-        if (GetAsyncKeyState('W'))
-        {
-            yEnemy = yEnemy - speed;
-            enemy = enemyUp;
-        }
-        else if (GetAsyncKeyState('S'))
-        {
-            yEnemy = yEnemy + speed;
-            enemy = enemyDown;
-        }
 
         //Движение карты
-        if (xCar < 100 || xEnemy < 100)
-        {
-            xEnemy = xEnemy + speed;
-            xCar = xCar + speed;
-            xTrack = xTrack - speed;
-        }
-
-        else if (xCar > 900 || xEnemy > 900)
-        {
-            xEnemy = xEnemy - speed;
-            xCar = xCar - speed;
-            xTrack = xTrack + speed;
-        }
-
-
-
-        if (yCar < 100 || yEnemy < 100)
-        {
-            yCar = yCar + speed;
-            yEnemy = yEnemy + speed;
-            yTrack = yTrack - speed;
-        }
-        else if (yCar > 700 || yEnemy > 700)
-        {
-            yCar = yCar - speed;
-            yEnemy = yEnemy - speed;
-            yTrack = yTrack + speed;
-        }
-
+        trackMovingX(&xCar, &xEnemy, &xTrack, speed);
+        trackMovingY(&yCar, &yEnemy, &yTrack, speed);
 
 
         //Проверка выхода за пределы экрана

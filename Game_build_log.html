@@ -4,26 +4,110 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
 <body>
 <tt>
-Build started on: <u>01-10-2020 at 11:11.32</u><br />
-Build ended on: <u>01-10-2020 at 11:11.33</u><p />
+Build started on: <u>14-10-2020 at 12:59.16</u><br />
+Build ended on: <u>14-10-2020 at 12:59.19</u><p />
 <b>-------------- Build: Debug in Game (compiler: GNU GCC Compiler - Strict + Fast (SINGLE FILES ONLY))---------------</b><br />
-mingw32-g++.exe "C:\Users\beavi\Documents\Game\main.cpp" -o bin\Debug\Game.exe -mwindows  -Wall -fexceptions  -g  -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equal -Winline -Wunreachable-code -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Weffc++ -Wmain -Wextra -Wall -g -pipe -fexceptions -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wempty-body -Wformat-security -Wformat=2 -Wignored-qualifiers -Wlogical-op -Wmissing-field-initializers -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wstack-usage=8192 -Wstrict-aliasing -Wstrict-null-sentinel -Wtype-limits -Wwrite-strings -D_DEBUG -D_EJUDGE_CLIENT_SIDE -D_EJC<br />
-C:\Users\beavi\Documents\Game\main.cpp: In function 'int main()':<br />
-<font color="#0000ff">C:\Users\beavi\Documents\Game\main.cpp:33:19: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
-             x = x - speed;<br />
-                   ^<br />
-<font color="#0000ff">C:\Users\beavi\Documents\Game\main.cpp:35:19: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
-             x = x + speed;<br />
-                   ^<br />
-<font color="#0000ff">C:\Users\beavi\Documents\Game\main.cpp:38:19: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
-             y = y - speed;<br />
-                   ^<br />
-<font color="#0000ff">C:\Users\beavi\Documents\Game\main.cpp:40:19: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
-             y = y + speed;<br />
-                   ^<br />
-Output size is 1,91 MB<br />
-<font color="#0000ff">Process terminated with status 0 (0 minutes, 1 seconds)</font><br />
-<font color="#0000ff">0 errors, 4 warnings (0 minutes, 1 seconds)</font><br />
+mingw32-g++.exe "C:\Users\beavi\Downloads\git\Game\main.cpp" -o bin\Debug\Game.exe -mwindows  -Wall -fexceptions  -g  -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equal -Winline -Wunreachable-code -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Weffc++ -Wmain -Wextra -Wall -g -pipe -fexceptions -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wempty-body -Wformat-security -Wformat=2 -Wignored-qualifiers -Wlogical-op -Wmissing-field-initializers -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wstack-usage=8192 -Wstrict-aliasing -Wstrict-null-sentinel -Wtype-limits -Wwrite-strings -D_DEBUG -D_EJUDGE_CLIENT_SIDE -D_EJC<br />
+In file included from C:\Users\beavi\Downloads\git\Game\main.cpp:2:0:<br />
+C:\Users\beavi\Downloads\git\Game\car.cpp: In function 'void drawCar(int, int, int, int, HDC, HDC, HDC)':<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:4:6: warning: no previous declaration for 'void drawCar(int, int, int, int, HDC, HDC, HDC)' [-Wmissing-declarations]</font><br />
+ void drawCar(int xCar, int yCar, int width, int height, HDC car, HDC carLeft, HDC carRight)<br />
+      ^<br />
+C:\Users\beavi\Downloads\git\Game\car.cpp: In function 'void moveCar(int*, int*, double, HDC__**, HDC, HDC, HDC, HDC)':<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:13:6: warning: no previous declaration for 'void moveCar(int*, int*, double, HDC__**, HDC, HDC, HDC, HDC)' [-Wmissing-declarations]</font><br />
+ void moveCar(int *xCar, int* yCar, double speed, HDC *car,<br />
+      ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:18:36: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xCar = round(*xCar - speed);<br />
+                                    ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:23:36: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xCar = round(*xCar + speed);<br />
+                                    ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:29:36: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yCar = round(*yCar - speed);<br />
+                                    ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:34:36: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yCar = round(*yCar + speed);<br />
+                                    ^<br />
+C:\Users\beavi\Downloads\git\Game\car.cpp: In function 'void moveEnemy(int*, int*, double, HDC__**, HDC, HDC, HDC, HDC)':<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:40:6: warning: no previous declaration for 'void moveEnemy(int*, int*, double, HDC__**, HDC, HDC, HDC, HDC)' [-Wmissing-declarations]</font><br />
+ void moveEnemy(int *xEnemy, int* yEnemy, double speed, HDC *enemy,<br />
+      ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:45:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xEnemy = *xEnemy - speed;<br />
+                           ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:50:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xEnemy = *xEnemy + speed;<br />
+                           ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:56:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yEnemy = *yEnemy - speed;<br />
+                           ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\car.cpp:61:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yEnemy = *yEnemy + speed;<br />
+                           ^<br />
+In file included from C:\Users\beavi\Downloads\git\Game\main.cpp:3:0:<br />
+C:\Users\beavi\Downloads\git\Game\track.cpp: In function 'int checkLimitX(int)':<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:3:5: warning: no previous declaration for 'int checkLimitX(int)' [-Wmissing-declarations]</font><br />
+ int checkLimitX(int xTrack)<br />
+     ^<br />
+C:\Users\beavi\Downloads\git\Game\track.cpp: In function 'int checkLimitY(int)':<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:10:5: warning: no previous declaration for 'int checkLimitY(int)' [-Wmissing-declarations]</font><br />
+ int checkLimitY(int yTrack)<br />
+     ^<br />
+C:\Users\beavi\Downloads\git\Game\track.cpp: In function 'void trackMovingX(int*, int*, int*, double)':<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:17:6: warning: no previous declaration for 'void trackMovingX(int*, int*, int*, double)' [-Wmissing-declarations]</font><br />
+ void trackMovingX(int *xCar, int *xEnemy, int *xTrack, double speed)<br />
+      ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:21:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xEnemy = *xEnemy + speed;<br />
+                           ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:22:23: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xCar = *xCar + speed;<br />
+                       ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:23:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xTrack = *xTrack - speed;<br />
+                           ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:28:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xEnemy = *xEnemy - speed;<br />
+                           ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:29:23: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xCar = *xCar - speed;<br />
+                       ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:30:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *xTrack = *xTrack + speed;<br />
+                           ^<br />
+C:\Users\beavi\Downloads\git\Game\track.cpp: In function 'void trackMovingY(int*, int*, int*, double)':<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:34:6: warning: no previous declaration for 'void trackMovingY(int*, int*, int*, double)' [-Wmissing-declarations]</font><br />
+ void trackMovingY(int *yCar, int *yEnemy, int *yTrack, double speed)<br />
+      ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:38:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yEnemy = *yEnemy + speed;<br />
+                           ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:39:23: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yCar = *yCar + speed;<br />
+                       ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:40:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yTrack = *yTrack - speed;<br />
+                           ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:45:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yEnemy = *yEnemy - speed;<br />
+                           ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:46:23: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yCar = *yCar - speed;<br />
+                       ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\track.cpp:47:27: warning: conversion to 'int' from 'double' may alter its value [-Wconversion]</font><br />
+         *yTrack = *yTrack + speed;<br />
+                           ^<br />
+C:\Users\beavi\Downloads\git\Game\main.cpp: In function 'int main()':<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\main.cpp:54:48: warning: conversion to 'float' from 'int' may alter its value [-Wconversion]</font><br />
+         txRectangle(xCar - 40, yCar - 50, xCar - 40 + 5 * fuelCar, yCar - 40);<br />
+                                                ^<br />
+<font color="#0000ff">C:\Users\beavi\Downloads\git\Game\main.cpp:100:27: warning: conversion to 'float' from 'double' may alter its value [-Wconversion]</font><br />
+         fuelCar = fuelCar - 0.01;<br />
+                           ^<br />
+Output size is 1,92 MB<br />
+<font color="#0000ff">Process terminated with status 0 (0 minutes, 3 seconds)</font><br />
+<font color="#0000ff">0 errors, 29 warnings (0 minutes, 3 seconds)</font><br />
 </tt>
 </body>
 </html>
