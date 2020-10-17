@@ -16,7 +16,7 @@ int checkLimitY(int yTrack)
 
 void trackMovingX(int *xCar, int *xEnemy, int *xTrack, double speed)
 {
-    if (*xCar < 100 || *xEnemy < 100)
+    if (*xCar < 200 || *xEnemy < 200)
     {
         *xEnemy = *xEnemy + speed;
         *xCar = *xCar + speed;
@@ -33,14 +33,14 @@ void trackMovingX(int *xCar, int *xEnemy, int *xTrack, double speed)
 
 void trackMovingY(int *yCar, int *yEnemy, int *yTrack, double speed)
 {
-    if (*yCar < 100 || *yEnemy < 100)
+    if (*yCar < 200 || *yEnemy < 200)
     {
         *yEnemy = *yEnemy + speed;
         *yCar = *yCar + speed;
         *yTrack = *yTrack - speed;
     }
 
-    else if (*yCar > 700 || *yEnemy > 700)
+    else if (*yCar > 600 || *yEnemy > 600)
     {
         *yEnemy = *yEnemy - speed;
         *yCar = *yCar - speed;

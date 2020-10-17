@@ -1,6 +1,25 @@
 #include "TXLib.h"
 #include "car.cpp"
+#include "JerryCan.cpp"
 #include "track.cpp"
+
+//Машина берет топливо
+void getFuel(Car* car, JerryCan* can1, int xTrack, int yTrack)
+{
+    if (car->x - 40 < can1->x - xTrack + 50 &&
+        car->x + 40 > can1->x - xTrack &&
+        car->y - 40 < can1->y - yTrack + 70 &&
+        car->y + 40 > can1->y - yTrack &&
+        can1->visible)
+    {
+        can1->visible = false;
+        car->fuel = car->fuel + 10;
+
+        //Размер бака топливного
+        if (car->fuel > 20)
+            car->fuel = 20;
+    }
+}
 
 int main()
 {
@@ -23,11 +42,13 @@ int main()
                 txLoadImage ("Pictures/Cars/Mercedes/Up.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Down.bmp"), enemy.Left};
 
-    HDC jerrycan = txLoadImage("Pictures/jerrycan.bmp");
-    int xCan = 800;
-    int yCan = 1000;
-    int frameCan = 0;
-    bool visibleCan = true;
+    int N_CAN = 5;
+    JerryCan can[N_CAN];
+    can[0] = { 800, 1000, txLoadImage("Pictures/jerrycan.bmp"), 0, true};
+    can[1] = {1800, 1400, can[0].picture, 0, true};
+    can[2] = {1200,  920, can[0].picture, 0, true};
+    can[3] = {1000,  350, can[0].picture, 0, true};
+    can[4] = {2000,  400, can[0].picture, 0, true};
 
     while (!GetAsyncKeyState(VK_ESCAPE))
     {
@@ -37,14 +58,20 @@ int main()
         txClear();
 
         txBitBlt (txDC(), 0, 0, 2400, 1623, track, xTrack, yTrack);
-        if (visibleCan)
-            txTransparentBlt(txDC(), xCan-xTrack, yCan-yTrack,
-                50, 74, jerrycan, 50 * frameCan, 0, TX_WHITE);
 
-        //Кадр канистры
-        frameCan++;
-        if (frameCan >= 4)
-            frameCan = 0;
+        //Рисование бочек
+        for (int i = 0; i < N_CAN; i++)
+        {
+            if (can[i].visible)
+                txTransparentBlt(txDC(), can[i].x - xTrack, can[i].y - yTrack,
+                    50, 74, can[i].picture, 50 * can[i].frame, 0, TX_WHITE);
+
+            //Кадр канистры
+            can[i].frame++;
+            if (can[i].frame >= 4)
+                can[i].frame = 0;
+        }
+
 
         car.draw();
         enemy.draw();
@@ -63,16 +90,13 @@ int main()
 
 
         //КОнтакт с канистрой
-        if (car.x - 40 < xCan-xTrack + 50 &&
-            car.x + 40 > xCan-xTrack &&
-            car.y - 40 < yCan-yTrack + 70 &&
-            car.y + 40 > yCan-yTrack &&
-            visibleCan)
+        for (int i = 0; i < N_CAN; i++)
         {
-            visibleCan = false;
-            car.fuel = car.fuel + 10;
-        }
+            getFuel(&car, &can[i], xTrack, yTrack);
+            getFuel(&enemy, &can[i], xTrack, yTrack);
 
+            assert (i < N_CAN);
+        }
 
         //Движение
         car.moving();
@@ -98,7 +122,8 @@ int main()
     txDeleteDC (enemy.pic);    txDeleteDC (enemy.Left);    txDeleteDC (enemy.Right);
     txDeleteDC (enemy.Up);     txDeleteDC (enemy.Down);
 
-    txDeleteDC(jerrycan);
+    for (int i = 0; i < N_CAN; i++)
+        txDeleteDC(can[i].picture);
 
     return 0;
 }
