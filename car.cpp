@@ -97,4 +97,24 @@ struct Car
         }
     }
 
+    //Выезд за пределы трассы
+    void trackLimits()
+    {
+        bool returnBack = false;
+        for (int x1 = x - 20; x1 <= x + 20; x1 = x1 + 5)
+        {
+            for (int y1 = y - 20; y1 <= y + 20; y1 = y1 + 5)
+            {
+                if (txGetPixel(x1, y1) == RGB(0,96,0))
+                {
+                    returnBack = true;
+                }
+            }
+        }
+
+        if (returnBack && fuel > 0.1)
+        {
+            fuel = fuel - 0.1;
+        }
+    }
 };

@@ -27,13 +27,6 @@ int main()
     int HEIGHT = 800;
     txCreateWindow (WIDTH, HEIGHT);
 
-/*
-Трасса
-Топливо, положение машины
-Круги
-Канистры
-*/
-
     HDC track = txLoadImage ("Pictures/Tracks/Spa.bmp");
     int xTrack = -100;
     int yTrack = 700;
@@ -43,12 +36,13 @@ int main()
                 txLoadImage ("Pictures/Cars/Acura/Right.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/Up.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/Down.bmp"), car.Left};
-    Car enemy = {620, 420, 15.0, 5, 120, 51, 102,
+    Car enemy = {620, 429, 15.0, 3, 120, 51, 102,
                 txLoadImage ("Pictures/Cars/Mercedes/Left.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Right.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Up.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Down.bmp"), enemy.Left};
 
+    const COLORREF enemyColor = RGB(0, 0, 0);
     int oldCarX = 0, oldCarY = 0;
     int laps = 0;
     int level = 1;
@@ -72,7 +66,7 @@ int main()
         txSetFillColor(TX_WHITE);
         txClear();
 
-        txBitBlt (txDC(), 0, 0, 2400, 1623, track, xTrack, yTrack);
+        txBitBlt (txDC(), 0, 0, 2400, 1665, track, xTrack, yTrack);
 
         if (txGetPixel(car.x, car.y) == RGB(255, 255, 0) && lapTime > 20000)
         {
@@ -113,23 +107,88 @@ int main()
 
 
 
-        //Выезд за пределы трассы
-        bool returnBack = false;
-        for (int x = car.x - 20; x <= car.x + 20; x = x + 5)
+
+        //Движение врага
+        //Движется влево
+        if (enemy.pic == enemy.Left)
         {
-            for (int y = car.y - 20; y <= car.y + 20; y = y + 5)
+            if (txGetPixel(enemy.x - enemy.speed, enemy.y) == enemyColor)
             {
-                if (txGetPixel(x, y) == RGB(0,96,0))
-                {
-                    returnBack = true;
-                }
+                enemy.x -= enemy.speed;
+                enemy.pic = enemy.Left;
+            }
+            else if (txGetPixel(enemy.x, enemy.y - enemy.speed) == enemyColor)
+            {
+                enemy.y -= enemy.speed;
+                enemy.pic = enemy.Up;
+            }
+            else if (txGetPixel(enemy.x, enemy.y + enemy.speed) == enemyColor)
+            {
+                enemy.y += enemy.speed;
+                enemy.pic = enemy.Down;
+            }
+        }
+        //Движется вправо
+        else if (enemy.pic == enemy.Right)
+        {
+            if (txGetPixel(enemy.x + enemy.speed, enemy.y) == enemyColor)
+            {
+                enemy.x += enemy.speed;
+                enemy.pic = enemy.Right;
+            }
+            else if (txGetPixel(enemy.x, enemy.y - enemy.speed) == enemyColor)
+            {
+                enemy.y -= enemy.speed;
+                enemy.pic = enemy.Up;
+            }
+            else if (txGetPixel(enemy.x, enemy.y + enemy.speed) == enemyColor)
+            {
+                enemy.y += enemy.speed;
+                enemy.pic = enemy.Down;
+            }
+        }
+        //Движется вверх
+        else if (enemy.pic == enemy.Up)
+        {
+            if (txGetPixel(enemy.x, enemy.y - enemy.speed) == enemyColor)
+            {
+                enemy.y -= enemy.speed;
+                enemy.pic = enemy.Up;
+            }
+            else if (txGetPixel(enemy.x - enemy.speed, enemy.y) == enemyColor)
+            {
+                enemy.x -= enemy.speed;
+                enemy.pic = enemy.Left;
+            }
+            else if (txGetPixel(enemy.x + enemy.speed, enemy.y) == enemyColor)
+            {
+                enemy.x += enemy.speed;
+                enemy.pic = enemy.Right;
+            }
+        }
+        //Движется вниз
+        else if (enemy.pic == enemy.Down)
+        {
+            if (txGetPixel(enemy.x, enemy.y + enemy.speed) == enemyColor)
+            {
+                enemy.y += enemy.speed;
+                enemy.pic = enemy.Down;
+            }
+            else if (txGetPixel(enemy.x - enemy.speed, enemy.y) == enemyColor)
+            {
+                enemy.x -= enemy.speed;
+                enemy.pic = enemy.Left;
+            }
+            else if (txGetPixel(enemy.x + enemy.speed, enemy.y) == enemyColor)
+            {
+                enemy.x += enemy.speed;
+                enemy.pic = enemy.Right;
             }
         }
 
-        if (returnBack && car.fuel > 0.1)
-        {
-            car.fuel = car.fuel - 0.1;
-        }
+
+        //Выезд за пределы трассы
+        car.trackLimits();
 
         //Рисование бочек
         for (int i = 0; i < N_CAN; i++)
@@ -177,7 +236,7 @@ int main()
         oldCarX = car.x;
         oldCarY = car.y;
         car.moving();
-        enemy.moving2();
+        //enemy.moving2();
 
         //Движение карты
         trackMovingX(&car.x, &enemy.x, &xTrack, car.speed);
