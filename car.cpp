@@ -32,8 +32,11 @@ struct Car
         txSetColor(TX_BLACK);
         txSetFillColor(TX_BLACK);
         txRectangle(x - 40, y - 50, x - 40 + 100, y - 40);
-        txSetFillColor(TX_GREEN);
-        txRectangle(x - 40, y - 50, x - 40 + 5 * fuel, y - 40);
+        if (fuel > 0)
+        {
+            txSetFillColor(TX_GREEN);
+            txRectangle(x - 40, y - 50, x - 40 + 5 * fuel, y - 40);
+        }
     }
 
     //Движение

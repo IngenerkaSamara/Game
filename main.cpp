@@ -27,30 +27,45 @@ int main()
     int HEIGHT = 800;
     txCreateWindow (WIDTH, HEIGHT);
 
+/*
+Трасса
+Топливо, положение машины
+Круги
+Канистры
+*/
+
     HDC track = txLoadImage ("Pictures/Tracks/Spa.bmp");
     int xTrack = -100;
     int yTrack = 700;
 
-    Car car = {600, 400, 10.0, 5, 120, 63, 104,
+    Car car = {650, 400, 15.0, 5, 120, 63, 104,
                 txLoadImage ("Pictures/Cars/Acura/Left.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/Right.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/Up.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/Down.bmp"), car.Left};
-    Car enemy = {620, 420, 10.0, 5, 120, 51, 102,
+    Car enemy = {620, 420, 15.0, 5, 120, 51, 102,
                 txLoadImage ("Pictures/Cars/Mercedes/Left.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Right.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Up.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Down.bmp"), enemy.Left};
 
-    int N_CAN = 5;
+    int oldCarX = 0, oldCarY = 0;
+    int laps = 0;
+    int level = 1;
+    int lapTime = 0;
+
+    int N_CAN = 8;
     JerryCan can[N_CAN];
-    can[0] = { 800, 1000, txLoadImage("Pictures/jerrycan.bmp"), 0, true};
+    can[0] = { 800, 1050, txLoadImage("Pictures/jerrycan.bmp"), 0, true};
     can[1] = {1800, 1400, can[0].picture, 0, true};
     can[2] = {1200,  920, can[0].picture, 0, true};
-    can[3] = {1000,  350, can[0].picture, 0, true};
+    can[3] = {1100,  380, can[0].picture, 0, true};
     can[4] = {2000,  400, can[0].picture, 0, true};
+    can[5] = { 600,  600, can[0].picture, 0, true};
+    can[6] = {1500,  500, can[0].picture, 0, true};
+    can[7] = {1900,  900, can[0].picture, 0, true};
 
-    while (!GetAsyncKeyState(VK_ESCAPE))
+    while (!GetAsyncKeyState(VK_ESCAPE) && level < 3)
     {
         txBegin();
         txSetColor(TX_WHITE, 5);
@@ -58,6 +73,63 @@ int main()
         txClear();
 
         txBitBlt (txDC(), 0, 0, 2400, 1623, track, xTrack, yTrack);
+
+        if (txGetPixel(car.x, car.y) == RGB(255, 255, 0) && lapTime > 20000)
+        {
+            laps++;
+            lapTime = 0;
+        }
+
+        //Смена уровня
+        if (laps >= 1)
+        {
+            level++;
+
+            if (level == 2)
+            {
+                track = txLoadImage ("Pictures/Tracks/Marina Bay.bmp");
+                xTrack = -100;
+                yTrack = 700;
+
+                car.x = 700;
+                car.y = 400;
+                car.fuel = 15.0;
+                enemy.x = 700;
+                enemy.y = 400;
+                enemy.fuel = 15.0;
+
+                laps = 0;
+                lapTime = 0;
+
+                N_CAN = 6;
+                can[0] = { 800, 1050, txLoadImage("Pictures/jerrycan.bmp"), 0, true};
+                can[1] = {1800, 1400, can[0].picture, 0, true};
+                can[2] = {1200,  920, can[0].picture, 0, true};
+                can[3] = {1100,  380, can[0].picture, 0, true};
+                can[4] = {2000,  400, can[0].picture, 0, true};
+                can[5] = { 600,  600, can[0].picture, 0, true};
+            }
+        }
+
+
+
+        //Выезд за пределы трассы
+        bool returnBack = false;
+        for (int x = car.x - 20; x <= car.x + 20; x = x + 5)
+        {
+            for (int y = car.y - 20; y <= car.y + 20; y = y + 5)
+            {
+                if (txGetPixel(x, y) == RGB(0,96,0))
+                {
+                    returnBack = true;
+                }
+            }
+        }
+
+        if (returnBack && car.fuel > 0.1)
+        {
+            car.fuel = car.fuel - 0.1;
+        }
 
         //Рисование бочек
         for (int i = 0; i < N_CAN; i++)
@@ -86,6 +158,9 @@ int main()
         sprintf(toplivo, "Топливо: %.2f/20", car.fuel);
         txTextOut(100, HEIGHT - 40, toplivo);
 
+        sprintf(toplivo, "Круги: %d", laps);
+        txTextOut(350, HEIGHT - 40, toplivo);
+
 
 
 
@@ -99,6 +174,8 @@ int main()
         }
 
         //Движение
+        oldCarX = car.x;
+        oldCarY = car.y;
         car.moving();
         enemy.moving2();
 
@@ -112,9 +189,15 @@ int main()
         yTrack = checkLimitY(yTrack);
 
         txSleep(20);
+        lapTime += 20;
         txEnd();
     }
 
+
+    if (level >= 3)
+    {
+        txTextOut(100, 100, "Пробеда!!!");
+    }
     txDeleteDC (track);
     txDeleteDC (car.pic);      txDeleteDC (car.Left);      txDeleteDC (car.Right);
     txDeleteDC (car.Up);       txDeleteDC (car.Down);
