@@ -14,7 +14,7 @@ int checkLimitY(int yTrack)
     return yTrack;
 }
 
-void trackMovingX(int *xCar, int *xEnemy, int *xTrack, double speed)
+void trackMovingX(int *xCar, int *xEnemy, int *xTrack, double speed, int WIDTH)
 {
     if (*xCar < 200 || *xEnemy < 200)
     {
@@ -23,7 +23,7 @@ void trackMovingX(int *xCar, int *xEnemy, int *xTrack, double speed)
         *xTrack = *xTrack - speed;
     }
 
-    else if (*xCar > 900 || *xEnemy > 900)
+    else if (*xCar > WIDTH - 200 || *xEnemy > WIDTH - 200)
     {
         *xEnemy = *xEnemy - speed;
         *xCar = *xCar - speed;
@@ -31,7 +31,7 @@ void trackMovingX(int *xCar, int *xEnemy, int *xTrack, double speed)
     }
 }
 
-void trackMovingY(int *yCar, int *yEnemy, int *yTrack, double speed)
+void trackMovingY(int *yCar, int *yEnemy, int *yTrack, double speed, int HEIGHT)
 {
     if (*yCar < 200 || *yEnemy < 200)
     {
@@ -40,7 +40,7 @@ void trackMovingY(int *yCar, int *yEnemy, int *yTrack, double speed)
         *yTrack = *yTrack - speed;
     }
 
-    else if (*yCar > 600 || *yEnemy > 600)
+    else if (*yCar > HEIGHT - 200 || *yEnemy > HEIGHT - 200)
     {
         *yEnemy = *yEnemy - speed;
         *yCar = *yCar - speed;

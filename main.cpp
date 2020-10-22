@@ -2,6 +2,12 @@
 #include "car.cpp"
 #include "JerryCan.cpp"
 #include "track.cpp"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdlib.h>
+
+using namespace std;
 
 //Машина берет топливо
 void getFuel(Car* car, JerryCan* can1, int xTrack, int yTrack)
@@ -23,8 +29,34 @@ void getFuel(Car* car, JerryCan* can1, int xTrack, int yTrack)
 
 int main()
 {
-    const int WIDTH = 1200;
-    const int HEIGHT = 800;
+    int WIDTH = 100;
+    int HEIGHT = 800;
+    int SPEED = 3;
+
+    string line;
+
+    ifstream in("Настройки.txt"); // окрываем файл для чтения
+    if (in.is_open())
+    {
+        //Ширина
+        getline(in, line);
+        int equalPos = line.find(" = ");
+        line = line.substr(equalPos + 3);
+        WIDTH = atoi(line.c_str());
+
+        //Высота
+        getline(in, line);
+        line = line.substr(9);
+        HEIGHT = atoi(line.c_str());
+
+        //Скорость
+        getline(in, line);
+        line = line.substr(8);
+        SPEED = atoi(line.c_str());
+    }
+    in.close();     // закрываем файл
+
+
     txCreateWindow (WIDTH, HEIGHT);
 
     HDC track1 = txLoadImage ("Pictures/Tracks/Spa.bmp");
@@ -33,7 +65,7 @@ int main()
     int xTrack = -100;
     int yTrack = 700;
 
-    Car car = {650, 400, 15.0, 4, 96, 51, 84,
+    Car car = {650, 400, 15.0, SPEED, 96, 51, 84,
                 txLoadImage ("Pictures/Cars/Acura/Left.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/Right.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/Up.bmp"),
@@ -42,7 +74,7 @@ int main()
                 txLoadImage ("Pictures/Cars/Acura/UpRight.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/DownLeft.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/DownRight.bmp"), car.Left};
-    Car enemy = {620, 436, 15.0, 4, 96, 41, 82,
+    Car enemy = {620, 436, 15.0, SPEED, 96, 41, 82,
                 txLoadImage ("Pictures/Cars/Mercedes/Left.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Right.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Up.bmp"),
@@ -71,6 +103,7 @@ int main()
     can[6] = {1500,  500, can[0].picture, 0, true};
     can[7] = {1900,  900, can[0].picture, 0, true};
 
+    //Выбор трассы
     bool startGame = false;
     while (!startGame)
     {
@@ -106,7 +139,7 @@ int main()
         txSleep(20);
     }
 
-
+    //Собственно игра
     while (!GetAsyncKeyState(VK_ESCAPE) && level < 3)
     {
         txBegin();
@@ -229,8 +262,8 @@ int main()
             car.moving();
 
             //Движение карты
-            trackMovingX(&car.x, &enemy.x, &xTrack, car.speed);
-            trackMovingY(&car.y, &enemy.y, &yTrack, car.speed);
+            trackMovingX(&car.x, &enemy.x, &xTrack, car.speed, WIDTH);
+            trackMovingY(&car.y, &enemy.y, &yTrack, car.speed, HEIGHT);
 
             //Проверка выхода за пределы экрана
             xTrack = checkLimitX(xTrack);
@@ -243,13 +276,15 @@ int main()
         txEnd();
     }
 
-
+    //Окончание игры
     if (level >= 3)
     {
         txTextOut(100, 100, "Пробеда!!!");
     }
 
     txDeleteDC (track);
+    txDeleteDC (track1);
+    txDeleteDC (track2);
     car.deletePics();
     enemy.deletePics();
 
