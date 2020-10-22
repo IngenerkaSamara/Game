@@ -45,6 +45,118 @@ struct Car
         }
     }
 
+    //Движение врага
+    void enemyMoving(COLORREF enemyColor)
+    {
+        //Движется влево
+        if (pic == Left || pic == UpLeft || pic == DownLeft)
+        {
+            if (txGetPixel(x - speed, y) == enemyColor)
+            {
+                x -= speed;
+                pic = Left;
+            }
+            else if (txGetPixel(x - speed, y - speed) == enemyColor)
+            {
+                x -= speed;
+                y -= speed;
+                pic = UpLeft;
+            }
+            else if (txGetPixel(x - speed, y + speed) == enemyColor)
+            {
+                x -= speed;
+                y += speed;
+                pic = DownLeft;
+            }
+            else if (txGetPixel(x, y - speed) == enemyColor)
+            {
+                y -= speed;
+                pic = Up;
+            }
+            else if (txGetPixel(x, y + speed) == enemyColor)
+            {
+                y += speed;
+                pic = Down;
+            }
+        }
+        //Движется вправо
+        else if (pic == Right || pic == UpRight || pic == DownRight)
+        {
+            if (txGetPixel(x + speed, y) == enemyColor)
+            {
+                x += speed;
+                pic = Right;
+            }
+            else if (txGetPixel(x + speed, y - speed) == enemyColor)
+            {
+                x += speed;
+                y -= speed;
+                pic = UpRight;
+            }
+            else if (txGetPixel(x + speed, y + speed) == enemyColor)
+            {
+                x += speed;
+                y += speed;
+                pic = DownRight;
+            }
+            else if (txGetPixel(x, y - speed) == enemyColor)
+            {
+                y -= speed;
+                pic = Up;
+            }
+            else if (txGetPixel(x, y + speed) == enemyColor)
+            {
+                y += speed;
+                pic = Down;
+            }
+        }
+        //Движется вверх
+        else if (pic == Up)
+        {
+            if (txGetPixel(x, y - speed) == enemyColor)
+            {
+                y -= speed;
+                pic = Up;
+            }
+            else if (txGetPixel(x - speed, y) == enemyColor)
+            {
+                x -= speed;
+                pic = Left;
+            }
+            else if (txGetPixel(x + speed, y) == enemyColor)
+            {
+                x += speed;
+                pic = Right;
+            }
+        }
+        //Движется вниз
+        else if (pic == Down)
+        {
+            if (txGetPixel(x, y + speed) == enemyColor)
+            {
+                y += speed;
+                pic = Down;
+            }
+            else if (txGetPixel(x - speed, y) == enemyColor)
+            {
+                x -= speed;
+                pic = Left;
+            }
+            else if (txGetPixel(x + speed, y) == enemyColor)
+            {
+                x += speed;
+                pic = Right;
+            }
+        }
+    }
+
+    void deletePics()
+    {
+        txDeleteDC (pic);
+        txDeleteDC (Left);      txDeleteDC (Right);        txDeleteDC (Up);       txDeleteDC (Down);
+        txDeleteDC (UpLeft);    txDeleteDC (UpRight);      txDeleteDC (DownLeft); txDeleteDC (DownRight);
+    }
+
     //Движение
     void moving()
     {
