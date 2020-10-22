@@ -16,6 +16,10 @@ struct Car
     HDC Right;
     HDC Up;
     HDC Down;
+    HDC UpLeft;
+    HDC UpRight;
+    HDC DownLeft;
+    HDC DownRight;
     HDC pic;
 
     //Рисование машины
@@ -23,19 +27,21 @@ struct Car
     {
         //Сама машина
         if (pic == Left || pic == Right)
-            txTransparentBlt (txDC(), x - 40, y - 40, width, height, pic, 0, 0, TX_WHITE);
+            txTransparentBlt (txDC(), x - 30, y - 30, width, height, pic, 0, 0, TX_WHITE);
+        else if (pic == Up || pic == Down)
+            txTransparentBlt (txDC(), x - 30, y - 30, height, width, pic, 0, 0, TX_WHITE);
         else
-            txTransparentBlt (txDC(), x - 40, y - 40, height, width, pic, 0, 0, TX_WHITE);
+            txTransparentBlt (txDC(), x - 30, y - 30, diagonal, diagonal, pic, 0, 0, TX_WHITE);
 
 
         //Уровень топлива
         txSetColor(TX_BLACK);
         txSetFillColor(TX_BLACK);
-        txRectangle(x - 40, y - 50, x - 40 + 100, y - 40);
+        txRectangle(x - 40, y - 50, x - 40 + 60, y - 40);
         if (fuel > 0)
         {
             txSetFillColor(TX_GREEN);
-            txRectangle(x - 40, y - 50, x - 40 + 5 * fuel, y - 40);
+            txRectangle(x - 40, y - 50, x - 40 + 3 * fuel, y - 40);
         }
     }
 
@@ -47,7 +53,31 @@ struct Car
         if (fuel <= 0)
             return;
 
-        if (GetAsyncKeyState(VK_LEFT))
+        if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_UP))
+        {
+            x = round(x - speed);
+            y = round(y - speed);
+            pic = UpLeft;
+        }
+        else if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_DOWN))
+        {
+            x = round(x - speed);
+            y = round(y + speed);
+            pic = DownLeft;
+        }
+        else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_UP))
+        {
+            x = round(x + speed);
+            y = round(y - speed);
+            pic = UpRight;
+        }
+        else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_DOWN))
+        {
+            x = round(x + speed);
+            y = round(y + speed);
+            pic = DownRight;
+        }
+        else if (GetAsyncKeyState(VK_LEFT))
         {
             x = round(x - speed);
             pic = Left;
@@ -58,7 +88,7 @@ struct Car
             pic = Right;
         }
 
-        if (GetAsyncKeyState(VK_UP))
+        else if (GetAsyncKeyState(VK_UP))
         {
             y = round(y - speed);
             pic = Up;
@@ -101,9 +131,9 @@ struct Car
     void trackLimits()
     {
         bool returnBack = false;
-        for (int x1 = x - 20; x1 <= x + 20; x1 = x1 + 5)
+        for (int x1 = x - 15; x1 <= x + 15; x1 = x1 + 5)
         {
-            for (int y1 = y - 20; y1 <= y + 20; y1 = y1 + 5)
+            for (int y1 = y - 15; y1 <= y + 15; y1 = y1 + 5)
             {
                 if (txGetPixel(x1, y1) == RGB(0,96,0))
                 {

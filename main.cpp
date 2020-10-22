@@ -31,16 +31,24 @@ int main()
     int xTrack = -100;
     int yTrack = 700;
 
-    Car car = {650, 400, 15.0, 5, 120, 63, 104,
+    Car car = {650, 400, 15.0, 4, 96, 51, 84,
                 txLoadImage ("Pictures/Cars/Acura/Left.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/Right.bmp"),
                 txLoadImage ("Pictures/Cars/Acura/Up.bmp"),
-                txLoadImage ("Pictures/Cars/Acura/Down.bmp"), car.Left};
-    Car enemy = {620, 429, 15.0, 3, 120, 51, 102,
+                txLoadImage ("Pictures/Cars/Acura/Down.bmp"),
+                txLoadImage ("Pictures/Cars/Acura/UpLeft.bmp"),
+                txLoadImage ("Pictures/Cars/Acura/UpRight.bmp"),
+                txLoadImage ("Pictures/Cars/Acura/DownLeft.bmp"),
+                txLoadImage ("Pictures/Cars/Acura/DownRight.bmp"), car.Left};
+    Car enemy = {620, 436, 15.0, 4, 96, 41, 82,
                 txLoadImage ("Pictures/Cars/Mercedes/Left.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Right.bmp"),
                 txLoadImage ("Pictures/Cars/Mercedes/Up.bmp"),
-                txLoadImage ("Pictures/Cars/Mercedes/Down.bmp"), enemy.Left};
+                txLoadImage ("Pictures/Cars/Mercedes/Down.bmp"),
+                txLoadImage ("Pictures/Cars/Mercedes/UpLeft.bmp"),
+                txLoadImage ("Pictures/Cars/Mercedes/UpRight.bmp"),
+                txLoadImage ("Pictures/Cars/Mercedes/DownLeft.bmp"),
+                txLoadImage ("Pictures/Cars/Mercedes/DownRight.bmp"), enemy.Left};
 
     const COLORREF enemyColor = RGB(0, 0, 0);
     int oldCarX = 0, oldCarY = 0;
@@ -110,12 +118,24 @@ int main()
 
         //Движение врага
         //Движется влево
-        if (enemy.pic == enemy.Left)
+        if (enemy.pic == enemy.Left || enemy.pic == enemy.UpLeft || enemy.pic == enemy.DownLeft)
         {
             if (txGetPixel(enemy.x - enemy.speed, enemy.y) == enemyColor)
             {
                 enemy.x -= enemy.speed;
                 enemy.pic = enemy.Left;
+            }
+            else if (txGetPixel(enemy.x - enemy.speed, enemy.y - enemy.speed) == enemyColor)
+            {
+                enemy.x -= enemy.speed;
+                enemy.y -= enemy.speed;
+                enemy.pic = enemy.UpLeft;
+            }
+            else if (txGetPixel(enemy.x - enemy.speed, enemy.y + enemy.speed) == enemyColor)
+            {
+                enemy.x -= enemy.speed;
+                enemy.y += enemy.speed;
+                enemy.pic = enemy.DownLeft;
             }
             else if (txGetPixel(enemy.x, enemy.y - enemy.speed) == enemyColor)
             {
@@ -129,12 +149,24 @@ int main()
             }
         }
         //Движется вправо
-        else if (enemy.pic == enemy.Right)
+        else if (enemy.pic == enemy.Right || enemy.pic == enemy.UpRight || enemy.pic == enemy.DownRight)
         {
             if (txGetPixel(enemy.x + enemy.speed, enemy.y) == enemyColor)
             {
                 enemy.x += enemy.speed;
                 enemy.pic = enemy.Right;
+            }
+            else if (txGetPixel(enemy.x + enemy.speed, enemy.y - enemy.speed) == enemyColor)
+            {
+                enemy.x += enemy.speed;
+                enemy.y -= enemy.speed;
+                enemy.pic = enemy.UpRight;
+            }
+            else if (txGetPixel(enemy.x + enemy.speed, enemy.y + enemy.speed) == enemyColor)
+            {
+                enemy.x += enemy.speed;
+                enemy.y += enemy.speed;
+                enemy.pic = enemy.DownRight;
             }
             else if (txGetPixel(enemy.x, enemy.y - enemy.speed) == enemyColor)
             {
@@ -206,6 +238,7 @@ int main()
 
         car.draw();
         enemy.draw();
+        //txCircle(enemy.x, enemy.y, 5);
 
 
         //Строка состояния
